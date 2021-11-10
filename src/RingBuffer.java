@@ -29,18 +29,21 @@ public class RingBuffer {
         return pop();
     }
 
-
     public long count() {
         return Arrays.stream(elements).filter(Objects::nonNull).count();
     }
 
     private void push(int element) {
-        elements[head++] = element;
+        elements[incrementHead()] = element;
+    }
+
+    private int incrementHead() {
+        return head++;
     }
 
     private Integer pop() {
         Integer firstElement = elements[tail];
-        elements[tail++] = null;
+        elements[incrementTail()] = null;
         return firstElement;
     }
 
@@ -53,9 +56,13 @@ public class RingBuffer {
     }
 
     private void incrementTailAndCheckCapacity() {
-        if (tail++ == CAPACITY) {
+        if (incrementTail() == CAPACITY) {
             resetTail();
         }
+    }
+
+    private int incrementTail() {
+        return tail++;
     }
 
     private void resetHead() {
