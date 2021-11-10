@@ -14,7 +14,7 @@ public class RingBuffer {
         if (checkValueOverwrite()) {
             incrementTailAndCheckCapacity();
         }
-        elements[head++] = element;
+        push(element);
     }
 
     public boolean isEmpty() {
@@ -25,14 +25,23 @@ public class RingBuffer {
         if (checkCapacity(tail)) {
             resetTail();
         }
-        Integer firstElement = elements[tail];
-        elements[tail++] = null;
 
-        return firstElement;
+        return pop();
     }
+
 
     public long count() {
         return Arrays.stream(elements).filter(Objects::nonNull).count();
+    }
+
+    private void push(int element) {
+        elements[head++] = element;
+    }
+
+    private Integer pop() {
+        Integer firstElement = elements[tail];
+        elements[tail++] = null;
+        return firstElement;
     }
 
     private boolean checkValueOverwrite() {
